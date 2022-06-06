@@ -94,7 +94,7 @@ TBA
 push to staging
 
 # Staging url
-TBA
+https://ok-sf-stripe-webhooks-staging-uepvew4upa-ew.a.run.app
 
 # How to get Auth credentials to test on a new email address: 
 
