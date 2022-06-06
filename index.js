@@ -52,6 +52,11 @@ app.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (reques
         intent = event.data.object;
         await handleSuccessfulPayment(intent);
         break;
+    case 'payment_intent.payment_failed':
+        console.log(`Processing event type ${event.type}`);
+        intent = event.data.object;
+        await handleFailedPayment(intent);
+        break;
     default:
         console.log(`Unhandled event type ${event.type}`);
     }
@@ -87,6 +92,18 @@ async function handleAmountUpdate(subscription) {
 async function handleCardUpdate(subscription) {
     try {
         await salesforceService.sendUpdatedSubscriptionToSalesforce(subscription);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function handleFailedPayment(intent) {
+    await handleFailedPaymentForSalesforce(intent);
+}
+
+async function handleFailedPaymentForSalesforce(intent) {
+    try {
+        await salesforceService.sendPaymentToSalesforce(intent);
     } catch (error) {
         console.error(error);
     }
