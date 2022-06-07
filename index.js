@@ -98,15 +98,11 @@ async function handleCardUpdate(subscription) {
 }
 
 async function handleFailedPayment(intent) {
-    await handleFailedPaymentForSalesforce(intent);
-}
-
-async function handleFailedPaymentForSalesforce(intent) {
-    try {
-        await salesforceService.sendPaymentToSalesforce(intent);
-    } catch (error) {
-        console.error(error);
-    }
+  try {
+      await salesforceService.sendPaymentToSalesforce(intent);
+  } catch (error) {
+      console.error(error);
+  }
 }
 
 /**
