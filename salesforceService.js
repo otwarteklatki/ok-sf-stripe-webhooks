@@ -10,6 +10,7 @@ const URL = process.env.SALESFORCE_URL ? process.env.SALESFORCE_URL : 'https://o
 const AUTH_URL = `${URL}oauth2/token`;
 const PAYMENT_HANDLER_URL = `${URL}apexrest/payments/stripe/`;
 const SUBSCRIPTION_HANDLER_URL = `${URL}apexrest/subscriptions/stripe/`;
+const REFUND_HANDLER_URL = `${URL}apexrest/refund/stripe/`;
 const dateChecker = require('./dateChecker');
 
 module.exports = {
@@ -82,6 +83,20 @@ module.exports = {
         };
 
         sendToSalesforce(subscriptionData, SUBSCRIPTION_HANDLER_URL + endpoint);
+    },
+
+    async sendRefund(charge) {
+        console.log(`Sending refund for ${charge.payment_intent} to salesforce at ${REFUND_HANDLER_URL}`);
+
+        const refundData = {
+            refund: {
+                paymentIntentId: charge.payment_intent,
+                created: dateChecker.convertUnixTimestampToDate(charge.created),
+                amount: convertAmountToDecimal(charge.amount_refunded),
+            },
+        };
+
+        sendToSalesforce(refundData, REFUND_HANDLER_URL);
     },
 };
 
