@@ -50,12 +50,12 @@ app.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (reques
     case 'payment_intent.succeeded':
         console.log(`Processing event type ${event.type}`);
         intent = event.data.object;
-        await handleSuccessfulPayment(intent);
+        await handlePayment(intent);
         break;
     case 'payment_intent.payment_failed':
         console.log(`Processing event type ${event.type}`);
         intent = event.data.object;
-        await handleFailedPayment(intent);
+        await handlePayment(intent);
         break;
     default:
         console.log(`Unhandled event type ${event.type}`);
@@ -72,7 +72,7 @@ async function handleSubscriptionDeletion(subscription) {
     }
 }
 
-async function handleSuccessfulPayment(intent) {
+async function handlePayment(intent) {
     try {
         intent.subscription_id = await stripeService.retrieveSubscriptionId(intent);
         await salesforceService.sendPaymentToSalesforce(intent);
@@ -95,14 +95,6 @@ async function handleCardUpdate(subscription) {
     } catch (error) {
         console.error(error);
     }
-}
-
-async function handleFailedPayment(intent) {
-  try {
-      await salesforceService.sendPaymentToSalesforce(intent);
-  } catch (error) {
-      console.error(error);
-  }
 }
 
 /**
