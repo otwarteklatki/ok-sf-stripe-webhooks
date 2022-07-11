@@ -95,6 +95,7 @@ module.exports = {
 
         const refundData = {
             refund: {
+                id: charge.id,
                 paymentIntentId: charge.payment_intent,
                 created: dateChecker.convertUnixTimestampToDate(charge.created),
                 amount: convertAmountToDecimal(charge.amount_refunded),
