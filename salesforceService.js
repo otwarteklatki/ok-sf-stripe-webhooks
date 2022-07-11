@@ -18,6 +18,7 @@ module.exports = {
         console.log(`Sending payment intent ${paymentIntent.id} to salesforce at ${URL}`);
         await attachCustomerToPaymentIntent(paymentIntent);
         attachCardDetailsToPaymentIntent(paymentIntent);
+        attachErrorDetailsToPaymentIntent(paymentIntent);
 
         const paymentData = {
             payment: {
@@ -49,6 +50,7 @@ module.exports = {
                     last4Digits: paymentIntent.cardLast4Digits,
                 },
                 subscription_id: paymentIntent.subscription_id,
+                error: paymentIntent.errorCode,
             },
         };
 
@@ -137,6 +139,15 @@ async function attachCustomerToPaymentIntent(paymentIntent) {
         paymentIntent.customer = customer;
     } else {
         paymentIntent.customer = null;
+    }
+}
+
+async function attachErrorDetailsToPaymentIntent(paymentIntent) {
+    const paymentError = paymentIntent.last_payment_error;
+    paymentIntent.errorCode = null;
+
+    if (paymentError) {
+        paymentIntent.errorCode = paymentError.code;
     }
 }
 

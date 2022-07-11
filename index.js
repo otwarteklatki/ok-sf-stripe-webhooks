@@ -50,7 +50,12 @@ app.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (reques
     case 'payment_intent.succeeded':
         console.log(`Processing event type ${event.type}`);
         intent = event.data.object;
-        await handleSuccessfulPayment(intent);
+        await handlePayment(intent);
+        break;
+    case 'payment_intent.payment_failed':
+        console.log(`Processing event type ${event.type}`);
+        intent = event.data.object;
+        await handlePayment(intent);
         break;
     case 'charge.refunded':
         console.log(`Processing event type ${event.type}`);
@@ -80,7 +85,7 @@ async function handleRefund(charge) {
     }
 }
 
-async function handleSuccessfulPayment(intent) {
+async function handlePayment(intent) {
     try {
         intent.subscription_id = await stripeService.retrieveSubscriptionId(intent);
         await salesforceService.sendPaymentToSalesforce(intent);
