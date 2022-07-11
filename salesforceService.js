@@ -87,12 +87,19 @@ module.exports = {
 
     async sendRefund(charge) {
         console.log(`Sending refund for ${charge.payment_intent} to salesforce at ${REFUND_HANDLER_URL}`);
+        let refundReason = null;
+
+        if (charge.refunds && charge.refunds.data && charge.refunds.data[0]) {
+            refundReason = charge.refunds.data[0].reason;
+        }
 
         const refundData = {
             refund: {
                 paymentIntentId: charge.payment_intent,
                 created: dateChecker.convertUnixTimestampToDate(charge.created),
                 amount: convertAmountToDecimal(charge.amount_refunded),
+                status: charge.status,
+                reason: refundReason,
             },
         };
 
