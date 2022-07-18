@@ -1,5 +1,5 @@
 # ok-sf-stripe-webhooks
-Sends stripe data to salesforce
+Listens on webhook events from Stripe and forwards them to our salesforce environment.
 
 # Run Locally
 
