@@ -88,7 +88,7 @@ See the full documentation [here.](https://stripe.com/docs/webhooks/test)
 push to main
 
 # Production url
-TBA
+https://sf-webhooks.donate.otwarteklatki.pl
 
 # How to deploy to staging
 push to staging
