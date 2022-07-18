@@ -28,7 +28,7 @@ app.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (reques
     }
 
     // Handle the event
-    let subscription; let intent;
+    let subscription; let intent; let charge;
     switch (event.type) {
     case 'customer.subscription.deleted':
         console.log(`Processing event type ${event.type}`);
@@ -57,6 +57,11 @@ app.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (reques
         intent = event.data.object;
         await handlePayment(intent);
         break;
+    case 'charge.refunded':
+        console.log(`Processing event type ${event.type}`);
+        charge = event.data.object;
+        await handleRefund(charge);
+        break;
     default:
         console.log(`Unhandled event type ${event.type}`);
     }
@@ -67,6 +72,14 @@ app.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (reques
 async function handleSubscriptionDeletion(subscription) {
     try {
         await salesforceService.sendCanceledSubscriptionToSalesforce(subscription);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function handleRefund(charge) {
+    try {
+        await salesforceService.sendRefund(charge);
     } catch (error) {
         console.error(error);
     }

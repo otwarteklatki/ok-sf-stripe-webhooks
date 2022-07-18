@@ -10,6 +10,7 @@ const URL = process.env.SALESFORCE_URL ? process.env.SALESFORCE_URL : 'https://o
 const AUTH_URL = `${URL}oauth2/token`;
 const PAYMENT_HANDLER_URL = `${URL}apexrest/payments/stripe/`;
 const SUBSCRIPTION_HANDLER_URL = `${URL}apexrest/subscriptions/stripe/`;
+const REFUND_HANDLER_URL = `${URL}apexrest/refund/stripe/`;
 const dateChecker = require('./dateChecker');
 
 module.exports = {
@@ -85,7 +86,40 @@ module.exports = {
 
         sendToSalesforce(subscriptionData, SUBSCRIPTION_HANDLER_URL + endpoint);
     },
+
+    async sendRefund(charge) {
+        console.log(`Sending refund for ${charge.payment_intent} to salesforce at ${REFUND_HANDLER_URL}`);
+        const refundReason = getRefundReasonFromRefundedCharge(charge);
+        const refundId = getRefundIdFromRefundedCharge(charge);
+        const refundData = {
+            refund: {
+                id: refundId,
+                paymentIntentId: charge.payment_intent,
+                created: dateChecker.convertUnixTimestampToDate(charge.created),
+                amount: convertAmountToDecimal(charge.amount_refunded),
+                status: charge.status,
+                reason: refundReason,
+            },
+        };
+        sendToSalesforce(refundData, REFUND_HANDLER_URL);
+    },
 };
+
+function getRefundIdFromRefundedCharge(charge) {
+    if (charge.refunds && charge.refunds.data && charge.refunds.data[0]) {
+        return charge.refunds.data[0].id;
+    }
+    // fall back and use a modified charge ID if for some reason the refund ID can't be used.
+    return `REFUND-${charge.id}`;
+}
+
+function getRefundReasonFromRefundedCharge(charge) {
+    let refundReason = null;
+    if (charge.refunds && charge.refunds.data && charge.refunds.data[0]) {
+        refundReason = charge.refunds.data[0].reason;
+    }
+    return refundReason;
+}
 
 function attachCardDetailsToPaymentIntent(paymentIntent) {
     // salesforce must have all the variables present

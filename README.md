@@ -95,8 +95,3 @@ push to staging
 
 # Staging url
 https://ok-sf-stripe-webhooks-staging-uepvew4upa-ew.a.run.app
-
-# How to get Auth credentials to test on a new email address: 
-
-Follow this amazing guide on medium to get all the Google client environment variables:
-https://medium.com/@nickroach_50526/sending-emails-with-node-js-using-smtp-gmail-and-oauth2-316fe9c790a1
