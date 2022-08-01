@@ -76,7 +76,7 @@ async function handleSubscriptionDeletion(subscription) {
     try {
         // Wait a random amount of time between 0-10 seconds so no race condition with the other stripe webhooks project
         setTimeout(async () => {
-            await salesforceService.sendCanceledSubscriptionToSalesforce(subscription);
+            await salesforceService.sendCancelledSubscriptionToSalesforce(subscription);
         }, Math.floor(Math.random() * 10000));
     } catch (error) {
         console.error(`Error occured in handleSubscriptionDeletion ${error}`);

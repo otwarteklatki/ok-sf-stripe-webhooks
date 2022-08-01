@@ -57,7 +57,7 @@ module.exports = {
         sendToSalesforce(paymentData, PAYMENT_HANDLER_URL);
     },
 
-    async sendCanceledSubscriptionToSalesforce(subscription) {
+    async sendCancelledSubscriptionToSalesforce(subscription) {
         this.sendSubscriptionToSalesforce(subscription, 'cancel');
     },
 
