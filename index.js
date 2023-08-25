@@ -58,6 +58,14 @@ app.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (reques
     case 'payment_intent.payment_failed':
         console.log(`Processing event type ${event.type}`);
         intent = event.data.object;
+        /**
+         * In almost every scenerario these two dates are the same, but if it's a failed payment it's possible
+         * that it's a recharge and the date of the payment will be set as the initial payment intent collection
+         * attempt date.
+         *
+         * We want to represent the date of the actual collection on the payment object in salesforce.
+        * */
+        intent.created = event.created;
         await handlePayment(intent);
         break;
     case 'charge.refunded':
