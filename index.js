@@ -9,6 +9,9 @@ const stripeService = require('./stripeService');
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
+// retry when multiple resources are competing for the same object
+stripe.setMaxNetworkRetries(5);
+
 const app = express();
 app.use(morgan('combined'));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -71,42 +74,57 @@ app.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (reques
 
 async function handleSubscriptionDeletion(subscription) {
     try {
-        await salesforceService.sendCanceledSubscriptionToSalesforce(subscription);
+        // Wait a random amount of time between 0-10 seconds so no race condition with the other stripe webhooks project
+        setTimeout(async () => {
+            await salesforceService.sendCancelledSubscriptionToSalesforce(subscription);
+        }, Math.floor(Math.random() * 10000));
     } catch (error) {
-        console.error(error);
+        console.error(`Error occured in handleSubscriptionDeletion ${error}`);
     }
 }
 
 async function handleRefund(charge) {
     try {
-        await salesforceService.sendRefund(charge);
+        // Wait a random amount of time between 0-10 seconds so no race condition with the other stripe webhooks project
+        setTimeout(async () => {
+            await salesforceService.sendRefund(charge);
+        }, Math.floor(Math.random() * 10000));
     } catch (error) {
-        console.error(error);
+        console.error(`Error occured in handleRefund ${error}`);
     }
 }
 
 async function handlePayment(intent) {
     try {
-        intent.subscription_id = await stripeService.retrieveSubscriptionId(intent);
-        await salesforceService.sendPaymentToSalesforce(intent);
+        // Wait a random amount of time between 0-10 seconds so no race condition with the other stripe webhooks project
+        setTimeout(async () => {
+            intent.subscription_id = await stripeService.retrieveSubscriptionId(intent);
+            await salesforceService.sendPaymentToSalesforce(intent);
+        }, Math.floor(Math.random() * 10000));
     } catch (error) {
-        console.error(error);
+        console.error(`Error occured in handlePayment ${error}`);
     }
 }
 
 async function handleAmountUpdate(subscription) {
     try {
-        await salesforceService.sendUpdatedSubscriptionToSalesforce(subscription);
+        // Wait a random amount of time between 0-10 seconds so no race condition with the other stripe webhooks project
+        setTimeout(async () => {
+            await salesforceService.sendUpdatedSubscriptionToSalesforce(subscription);
+        }, Math.floor(Math.random() * 10000));
     } catch (error) {
-        console.error(error);
+        console.error(`Error occured in handleAmountUpdate ${error}`);
     }
 }
 
 async function handleCardUpdate(subscription) {
     try {
-        await salesforceService.sendUpdatedSubscriptionToSalesforce(subscription);
+        // Wait a random amount of time between 0-10 seconds so no race condition with the other stripe webhooks project
+        setTimeout(async () => {
+            await salesforceService.sendUpdatedSubscriptionToSalesforce(subscription);
+        }, Math.floor(Math.random() * 10000));
     } catch (error) {
-        console.error(error);
+        console.error(`Error occured in handleCardUpdate ${error}`);
     }
 }
 

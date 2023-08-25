@@ -57,7 +57,7 @@ module.exports = {
         sendToSalesforce(paymentData, PAYMENT_HANDLER_URL);
     },
 
-    async sendCanceledSubscriptionToSalesforce(subscription) {
+    async sendCancelledSubscriptionToSalesforce(subscription) {
         this.sendSubscriptionToSalesforce(subscription, 'cancel');
     },
 
@@ -92,7 +92,7 @@ module.exports = {
         const refundReason = getRefundReasonFromRefundedCharge(charge);
         const refundId = getRefundIdFromRefundedCharge(charge);
         const refundData = {
-            refund: {
+            stripeRefund: {
                 id: refundId,
                 paymentIntentId: charge.payment_intent,
                 created: dateChecker.convertUnixTimestampToDate(charge.created),

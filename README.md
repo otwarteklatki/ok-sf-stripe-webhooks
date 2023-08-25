@@ -1,5 +1,5 @@
 # ok-sf-stripe-webhooks
-Sends stripe data to salesforce
+Listens on webhook events from Stripe and forwards them to our salesforce environment.
 
 # Run Locally
 
@@ -88,7 +88,7 @@ See the full documentation [here.](https://stripe.com/docs/webhooks/test)
 push to main
 
 # Production url
-TBA
+https://sf-webhooks.donate.otwarteklatki.pl
 
 # How to deploy to staging
 push to staging

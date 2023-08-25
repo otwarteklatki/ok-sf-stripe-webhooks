@@ -1,9 +1,13 @@
 module.exports = {
     convertUnixTimestampToDate(timestamp) {
-        return new Date(timestamp * 1000);
+        const datetimeFromTimestamp = new Date(timestamp * 1000);
+        const cetOffset = 2 * 60; // CET time offset is GTM +2 hours
+        const zoneOffset = -cetOffset * 60 * 1000;
+        const localDatetime = new Date(datetimeFromTimestamp - zoneOffset);
+        return localDatetime;
     },
     convertUnixTimestampToDateString(timestamp) {
-        const date = new Date(timestamp * 1000);
+        const date = this.convertUnixTimestampToDate(timestamp);
         return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
     },
     isCardExpiringSoon(expMonth, expYear) {
