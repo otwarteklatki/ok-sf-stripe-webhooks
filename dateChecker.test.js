@@ -6,12 +6,19 @@ const index = require('./dateChecker');
 
 // dateChecker.convertUnixTimestampToDateString
 test('unix time stamp converter converts to a the correct date when given a valid timestamp', () => {
-    expect(index.convertUnixTimestampToDateString('1637583673')).toBe('22/11/2021');
+    expect(index.convertUnixTimestampToDateString('1692879426')).toBe('24/8/2023');
 });
 
-// dateChecker.convertUnixTimestampToIsoDateString
+// dateChecker.convertUnixTimestampToDate
 test('unix time stamp converter should return correctly set date when given a valid timestamp', () => {
-    expect(index.convertUnixTimestampToDate('1637583673').toISOString()).toBe('2021-11-22T12:21:13.000Z');
+    expect(index.convertUnixTimestampToDate('1692879426').toISOString()).toBe('2023-08-24T14:17:06.000Z');
+});
+
+test('unix time stamp converter should correctly set CET locale time zone when given a valid GTM timestamp', () => {
+    const date = new Date('2023-08-24T12:17:06.000Z');
+    const timestamp = Math.floor(date / 1000);
+
+    expect(index.convertUnixTimestampToDate(timestamp).toISOString()).toBe('2023-08-24T14:17:06.000Z');
 });
 
 // dateChecker.hasDatePassedExpireDate
