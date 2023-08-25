@@ -1,7 +1,8 @@
 module.exports = {
     convertUnixTimestampToDate(timestamp) {
         const datetimeFromTimestamp = new Date(timestamp * 1000);
-        const zoneOffset = datetimeFromTimestamp.getTimezoneOffset() * 60 * 1000;
+        const cetOffset = 2 * 60; // CET time offset is GTM +2 hours
+        const zoneOffset = -cetOffset * 60 * 1000;
         const localDatetime = new Date(datetimeFromTimestamp - zoneOffset);
         return localDatetime;
     },
