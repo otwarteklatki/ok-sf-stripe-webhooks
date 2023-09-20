@@ -51,6 +51,7 @@ module.exports = {
                 },
                 subscription_id: paymentIntent.subscription_id,
                 error: paymentIntent.errorCode,
+                decline_code: paymentIntent.declineCode,
             },
         };
 
@@ -156,9 +157,14 @@ async function attachCustomerToPaymentIntent(paymentIntent) {
 async function attachErrorDetailsToPaymentIntent(paymentIntent) {
     const paymentError = paymentIntent.last_payment_error;
     paymentIntent.errorCode = null;
+    paymentIntent.declineCode = null;
 
     if (paymentError) {
         paymentIntent.errorCode = paymentError.code;
+
+        if (paymentError.decline_code) {
+            paymentIntent.declineCode = paymentError.decline_code;
+        }
     }
 }
 
