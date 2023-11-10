@@ -2,7 +2,7 @@
     "name": "stripe-card-expire-notify",
     "version": "0.0.1",
     "dependencies": {
-        "axios": "^0.24.0",
+        "axios": "^1.6.0",
         "body-parser": "^1.19.0",
         "eslint": "^7.23.0",
         "eslint-config-airbnb-base": "^14.2.1",
